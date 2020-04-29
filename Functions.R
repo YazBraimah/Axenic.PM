@@ -62,13 +62,13 @@ csCluster_c<-function(object, k, logMode=T, method='none', pseudocount=1,...){
 ##------------------------------------------------------------------------##
 ##------------------------------------------------------------------------##
 
-geneBoxPlot <- function (gene, show_reps = F) {
+geneBoxPlot <- function (tpmTable, gene, show_reps = F) {
         if (grepl("FBgn", gene)) {
             description <- subset(snapshots, FBgn_ID == gene)$GeneName
-            geneName <- subset(tpm.table, gene_id == gene)$gene_symbol
-            cg_id <- subset(tpm.table, gene_id == gene)$annotation_ID
+            geneName <- subset(tpmTable, gene_id == gene)$gene_symbol
+            cg_id <- subset(tpmTable, gene_id == gene)$annotation_ID
             
-            p <- ggplot(subset(tpm.table, gene_id == gene), aes(Male, TPM, fill = Status)) +
+            p <- ggplot(subset(tpmTable, gene_id == gene), aes(Male, TPM, fill = Status)) +
                 geom_boxplot(outlier.size = 0, width = 0.3) +
                 geom_point(pch = 21, position = position_jitterdodge(), aes(fill = Status)) + 
                 facet_grid(.~Female, scales = "free_x", space = "free_x") +
@@ -79,11 +79,11 @@ geneBoxPlot <- function (gene, show_reps = F) {
                     strip.text = element_text(size = 14, face = "bold")) +
                 scale_fill_manual(values = c("#3f5a2a","#ffb200"))
         } else {
-            fbgn_id <- subset(tpm.table, gene_symbol == gene)$gene_id
+            fbgn_id <- subset(tpmTable, gene_symbol == gene)$gene_id
             description <- subset(snapshots, GeneSymbol == gene)$GeneName
-            cg_id <- subset(tpm.table, gene_symbol == gene)$annotation_ID
+            cg_id <- subset(tpmTable, gene_symbol == gene)$annotation_ID
             
-            p <- ggplot(subset(tpm.table, gene_symbol == gene), aes(Male, TPM, fill = Status)) +
+            p <- ggplot(subset(tpmTable, gene_symbol == gene), aes(Male, TPM, fill = Status)) +
                 geom_boxplot(outlier.size = 0, width = 0.3) +
                 geom_point(pch = 21, position = position_jitterdodge(), aes(fill = Status)) + 
                 facet_grid(.~Female, scales = "free_x", space = "free_x") +
@@ -103,14 +103,14 @@ geneBoxPlot <- function (gene, show_reps = F) {
 ##------------------------------------------------------------------------##
 ##------------------------------------------------------------------------##
 
-geneBoxPlot_mon <- function (gene, show_reps = F) {
+geneBoxPlot_mon <- function (tpmTable, gene, show_reps = F) {
 
         if (grepl("FBgn", gene)) {
             description <- subset(snapshots, FBgn_ID == gene)$GeneName
-            geneName <- subset(tpm.table, gene_id == gene)$gene_symbol
-            cg_id <- subset(tpm.table, gene_id == gene)$annotation_ID
+            geneName <- subset(tpmTable, gene_id == gene)$gene_symbol
+            cg_id <- subset(tpmTable, gene_id == gene)$annotation_ID
             
-            p <- ggplot(subset(tpm.table, gene_id == gene), aes(Male, TPM, fill = Status, colour = Status)) +
+            p <- ggplot(subset(tpmTable, gene_id == gene), aes(Male, TPM, fill = Status, colour = Status)) +
                 geom_boxplot(outlier.size = 0, width = 0.3, lwd = 0.1) +
                 geom_point(pch = 21, position = position_jitterdodge(), aes(fill = Status)) + 
                 facet_grid(.~Female, scales = "free_x", space = "free_x") +
@@ -122,11 +122,11 @@ geneBoxPlot_mon <- function (gene, show_reps = F) {
                 scale_fill_manual(values = c("#028fc2","#ffb200")) +
                 scale_colour_manual(values = c("#d3004a", "#3f5a2a"))
         } else {
-            fbgn_id <- subset(tpm.table, gene_symbol == gene)$gene_id
+            fbgn_id <- subset(tpmTable, gene_symbol == gene)$gene_id
             description <- subset(snapshots, GeneSymbol == gene)$GeneName
-            cg_id <- subset(tpm.table, gene_symbol == gene)$annotation_ID
+            cg_id <- subset(tpmTable, gene_symbol == gene)$annotation_ID
             
-            p <- ggplot(subset(tpm.table, gene_symbol == gene), aes(Male, TPM, fill = Status, colour = Status)) +
+            p <- ggplot(subset(tpmTable, gene_symbol == gene), aes(Male, TPM, fill = Status, colour = Status)) +
                 geom_boxplot(outlier.size = 0, width = 0.3) +
                 geom_point(pch = 21, position = position_jitterdodge(), aes(fill = Status)) + 
                 facet_grid(.~Female, scales = "free_x", space = "free_x") +
@@ -147,14 +147,14 @@ geneBoxPlot_mon <- function (gene, show_reps = F) {
 ##------------------------------------------------------------------------##
 ##------------------------------------------------------------------------##
 
-geneBarPlot_mon <- function (gene, show_reps = F, show_rep_names = F) {
+geneBarPlot_mon <- function (tpmTable, gene, show_reps = F, show_rep_names = F) {
 
         if (grepl("FBgn", gene)) {
             description <- subset(snapshots, FBgn_ID == gene)$GeneName
-            geneName <- subset(tpm.table, gene_id == gene)$gene_symbol
-            cg_id <- subset(tpm.table, gene_id == gene)$annotation_ID
+            geneName <- subset(tpmTable, gene_id == gene)$gene_symbol
+            cg_id <- subset(tpmTable, gene_id == gene)$annotation_ID
             
-            tmpDF = subset(tpm.table, gene_id == gene)
+            tmpDF = subset(tpmTable, gene_id == gene)
             tmpDF.se = summarySE(tmpDF, measurevar = "TPM", groupvars = c("gene_id", "gene_symbol", "annotation_ID", "Sample", "Female", "Male"))
 
             p <- ggplot() +
@@ -167,11 +167,11 @@ geneBarPlot_mon <- function (gene, show_reps = F, show_rep_names = F) {
                 scale_fill_manual(values = c("#01c5a8","#989000","#a7ccde"))
                 
         } else {
-            fbgn_id <- subset(tpm.table, gene_symbol == gene)$gene_id
+            fbgn_id <- subset(tpmTable, gene_symbol == gene)$gene_id
             description <- subset(snapshots, GeneSymbol == gene)$GeneName
-            cg_id <- subset(tpm.table, gene_symbol == gene)$annotation_ID
+            cg_id <- subset(tpmTable, gene_symbol == gene)$annotation_ID
             
-            tmpDF = subset(tpm.table, gene_symbol == gene)
+            tmpDF = subset(tpmTable, gene_symbol == gene)
             tmpDF.se = summarySE(tmpDF, measurevar = "TPM", groupvars = c("gene_id", "gene_symbol", "annotation_ID", "Sample", "Female", "Male"))
 
             p <- ggplot() +
@@ -195,13 +195,13 @@ geneBarPlot_mon <- function (gene, show_reps = F, show_rep_names = F) {
 ##------------------------------------------------------------------------##
 ##------------------------------------------------------------------------##
 
-geneBoxPlot_mon_byFemale <- function (gene, female, show_reps = F) 
+geneBoxPlot_mon_byFemale <- function (tpmTable, gene, female, show_reps = F) 
 {
     if (grepl("FBgn", gene)) {
         description <- subset(snapshots, FBgn_ID == gene)$GeneName
-        geneName <- subset(tpm.table, gene_id == gene)$gene_symbol
-        cg_id <- subset(tpm.table, gene_id == gene)$annotation_ID
-        p <- ggplot(subset(tpm.table, gene_id == gene & Female == female), aes(Male, 
+        geneName <- subset(tpmTable, gene_id == gene)$gene_symbol
+        cg_id <- subset(tpmTable, gene_id == gene)$annotation_ID
+        p <- ggplot(subset(tpmTable, gene_id == gene & Female == female), aes(Male, 
             TPM, fill = Status, colour = Status)) + geom_boxplot(outlier.size = 0, 
             width = 0.3, lwd = 0.1) + geom_point(pch = 21, position = position_jitterdodge(), 
             aes(fill = Status)) + labs(title = paste(gene, " (", 
@@ -213,10 +213,10 @@ geneBoxPlot_mon_byFemale <- function (gene, female, show_reps = F)
             scale_colour_manual(values = c("#d3004a", "#3f5a2a"))
     }
     else {
-        fbgn_id <- subset(tpm.table, gene_symbol == gene)$gene_id
+        fbgn_id <- subset(tpmTable, gene_symbol == gene)$gene_id
         description <- subset(snapshots, GeneSymbol == gene)$GeneName
-        cg_id <- subset(tpm.table, gene_symbol == gene)$annotation_ID
-        p <- ggplot(subset(tpm.table, gene_symbol == gene & Female == female), aes(Male, 
+        cg_id <- subset(tpmTable, gene_symbol == gene)$annotation_ID
+        p <- ggplot(subset(tpmTable, gene_symbol == gene & Female == female), aes(Male, 
             TPM, fill = Status, colour = Status)) + geom_boxplot(outlier.size = 0, 
             width = 0.3) + geom_point(pch = 21, position = position_jitterdodge(), 
             aes(fill = Status)) + labs(title = paste(gene, " (", 
@@ -249,7 +249,7 @@ geneBoxPlot_fa2 <- function (tpmTable, gene) {
 #                 geom_jitter() +
                 facet_grid(.~dev_stage, scale = "free_x", space = "free_x") + 
                 labs(title = paste(gene, " (", geneName, "): ", description, sep = ""), subtitle = paste(str_wrap(detail, width = 110), sep = "")) + 
-                theme_monokai_full() +
+                # theme_monokai_full() +
                 theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
                 scale_fill_brewer(palette="Dark2") +
                 scale_colour_brewer(palette="Set1")
@@ -263,7 +263,7 @@ geneBoxPlot_fa2 <- function (tpmTable, gene) {
 #                 geom_jitter() +
                 facet_grid(.~dev_stage, scale = "free_x", space = "free_x") + 
                 labs(title = paste(gene, " (", geneName, "): ", description, sep = ""), subtitle = paste(str_wrap(detail, width = 110), sep = "")) + 
-                theme_monokai_full() +
+                # theme_monokai_full() +
                 theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
                 scale_fill_brewer(palette="Dark2") +
                 scale_colour_brewer(palette="Set1")
@@ -328,6 +328,207 @@ p <- pheatmap(
 )
     return(p)
     }
+
+
+heatmap_mean <- function(tpmTable, gene_list, title) {
+
+    col_annot = unique(select(sampleInfo, Sample, Status, Female, Male))
+    rownames(col_annot) = col_annot$Sample
+    col_annot = subset(col_annot, select = c("Status", "Female", "Male"))
+
+    tmpMat<-cast(subset(tpmTable, gene_id %in% gene_list), gene_id~Sample, value ="TPM", fun.aggregate = mean)
+    data <- tmpMat[,-1]
+    rownames(data) <- tmpMat[,1]
+    
+## process tmm matrix
+data = log2(data+1)
+data = as.data.frame(t(scale(t(data), scale=F)))
+data[data < -2] = -2
+data[data > 2] = 2
+init_cols = colnames(data)
+data$FBgn_ID = rownames(data)
+data = merge(data, FBgn_to_symbol, by.x = "FBgn_ID", by.y = "primary_FBgn", all.x = T)
+rownames(data) = data$gene_symbol
+data = subset(data, select = init_cols)
+colnames(data) = gsub("_", " ", colnames(data))
+
+# plotter
+p <- pheatmap(
+  mat               = data,
+  main              = title,
+  color             = inferno(100),
+  border_color      = NA,
+  show_colnames     = TRUE,
+  show_rownames     = TRUE,
+  annotation_col    = col_annot,
+  drop_levels       = TRUE,
+#   cluster_col    = FALSE,
+  annotation_names_row = F,
+  fontsize          = 8    
+)
+    return(p)
+    }
+
+
+geneBarPlot <- function (tpmTable, gene, show_reps = F, show_rep_names = F) 
+{
+    if (grepl("FBgn", gene)) {
+        description <- subset(snapshots, FBgn_ID == gene)$GeneName
+        geneName <- subset(tpmTable, gene_id == gene)$gene_symbol
+        cg_id <- subset(tpmTable, gene_id == gene)$annotation_ID
+        tmpDF = subset(tpmTable, gene_id == gene)
+        tmpDF.se = summarySE(tmpDF, measurevar = "TPM", groupvars = c("gene_id", 
+            "gene_symbol", "annotation_ID", "Sample", "Female", 
+            "Male"))
+        p <- ggplot() + geom_bar(data = tmpDF.se, mapping = aes(Female, 
+            TPM, fill = Male), stat = "identity", 
+            position = position_dodge(0.6), size = 0.7, width = 0.5) + 
+            geom_errorbar(data = tmpDF.se, aes(Female, 
+                ymin = TPM - se, ymax = TPM + se, colour = Male), width = 0.2, 
+                position = position_dodge(0.6), size = 1) + labs(title = paste(gene, 
+            " (", geneName, ")", sep = ""), subtitle = paste(cg_id, 
+            ": ", description, sep = "")) + facet_grid(.~Female, space = "free_x", scale = "free_x") + theme(axis.text.x = element_text(size = 13), 
+            axis.text.y = element_text(size = 14)) + scale_fill_manual(values = c("#003440", 
+            "#003440","#003440"))
+    }
+    else {
+        fbgn_id <- subset(tpmTable, gene_symbol == gene)$gene_id
+        description <- subset(snapshots, GeneSymbol == gene)$GeneName
+        cg_id <- subset(tpmTable, gene_symbol == gene)$annotation_ID
+        tmpDF = subset(tpmTable, gene_symbol == gene)
+        tmpDF.se = summarySE(tmpDF, measurevar = "TPM", groupvars = c("gene_id", 
+            "gene_symbol", "annotation_ID", "Sample", "Female", 
+            "Male"))
+        p <- ggplot() + geom_bar(data = tmpDF.se, mapping = aes(Female, 
+            TPM, fill = Male), stat = "identity", 
+            position = position_dodge(0.6), size = 0.7, width = 0.5) + 
+            geom_errorbar(data = tmpDF.se, aes(Female, 
+                ymin = TPM - se, ymax = TPM + se, colour = Male), width = 0.2, 
+                position = position_dodge(0.6), size = 1) + labs(title = paste(gene, 
+            " (", fbgn_id, ")", sep = ""), subtitle = paste(cg_id, 
+            ": ", description, sep = "")) + facet_grid(.~Female, space = "free_x", scale = "free_x") + theme(axis.text.x = element_text(size = 13), 
+            axis.text.y = element_text(size = 14)) + scale_fill_manual(values = c("gray", 
+            "#58b8f0","#ccae50")) + scale_colour_manual(values = c("#003440", 
+            "#003440","#003440"))
+    }
+    if (show_reps) {
+        p <- p + geom_point(data = tmpDF, mapping = aes(Female, 
+            TPM, colour = Male), position = position_jitterdodge(jitter.width = 0.1, 
+            dodge.width = 0.6), size = 0.8)
+        if (show_rep_names) {
+            p <- p + geom_text_repel(data = tmpDF, aes(label = replicate, 
+                colour = Male), force = 1)
+        }
+    }
+    return(p)
+}
+
+
+geneBarPlot_byFemale <- function (tpmTable, gene, show_reps = F, show_rep_names = F, female = "axenic") 
+{
+    if (grepl("FBgn", gene)) {
+        description <- subset(snapshots, FBgn_ID == gene)$GeneName
+        geneName <- subset(tpmTable, gene_id == gene)$gene_symbol
+        cg_id <- subset(tpmTable, gene_id == gene)$annotation_ID
+        tmpDF = subset(tpmTable, gene_id == gene)
+        tmpDF.se = summarySE(tmpDF, measurevar = "TPM", groupvars = c("gene_id", 
+            "gene_symbol", "annotation_ID", "Sample", "Female", 
+            "Male"))
+        p <- ggplot() + geom_bar(data = filter(tmpDF.se, Female == female), mapping = aes(Female, 
+            TPM, fill = Male), stat = "identity", 
+            position = position_dodge(0.6), size = 0.7, width = 0.5) + 
+            geom_errorbar(data = filter(tmpDF.se, Female == female), aes(Female, 
+                ymin = TPM - se, ymax = TPM + se, colour = Male), width = 0.2, 
+                position = position_dodge(0.6), size = 1) + labs(title = paste(gene, 
+            " (", geneName, ")", sep = ""), subtitle = paste(cg_id, 
+            ": ", description, sep = "")) + theme(axis.text.x = element_text(size = 13), 
+            axis.text.y = element_text(size = 14)) + scale_fill_manual(values = c("#003440", 
+            "#003440","#003440"))
+    }
+    else {
+        fbgn_id <- subset(tpmTable, gene_symbol == gene)$gene_id
+        description <- subset(snapshots, GeneSymbol == gene)$GeneName
+        cg_id <- subset(tpmTable, gene_symbol == gene)$annotation_ID
+        tmpDF = subset(tpmTable, gene_symbol == gene)
+        tmpDF.se = summarySE(tmpDF, measurevar = "TPM", groupvars = c("gene_id", 
+            "gene_symbol", "annotation_ID", "Sample", "Female", 
+            "Male"))
+        p <- ggplot() + geom_bar(data = filter(tmpDF.se, Female == female), mapping = aes(Female, 
+            TPM, fill = Male), stat = "identity", 
+            position = position_dodge(0.6), size = 0.7, width = 0.5) + 
+            geom_errorbar(data = filter(tmpDF.se, Female == female), aes(Female, 
+                ymin = TPM - se, ymax = TPM + se, colour = Male), width = 0.2, 
+                position = position_dodge(0.6), size = 1) + labs(title = paste(gene, 
+            " (", fbgn_id, ")", sep = ""), subtitle = paste(cg_id, 
+            ": ", description, sep = "")) + theme(axis.text.x = element_text(size = 13), 
+            axis.text.y = element_text(size = 14)) + scale_fill_manual(values = c("gray", 
+            "#58b8f0","#ccae50")) + scale_colour_manual(values = c("#003440", 
+            "#003440","#003440"))
+    }
+    if (show_reps) {
+        p <- p + geom_point(data = filter(tmpDF, Female == female), mapping = aes(Female, 
+            TPM, colour = Male), position = position_jitterdodge(jitter.width = 0.1, 
+            dodge.width = 0.6), size = 0.8)
+        if (show_rep_names) {
+            p <- p + geom_text_repel(data = filter(tmpDF, Female == female), aes(label = replicate, 
+                colour = Male), force = 1)
+        }
+    }
+    return(p)
+}
+
+
+ geneBarPlot_mon_byFemale <- function (tpmTable, gene, show_reps = F, show_rep_names = F, female = "axenic") 
+{
+    if (grepl("FBgn", gene)) {
+        description <- subset(snapshots, FBgn_ID == gene)$GeneName
+        geneName <- subset(tpmTable, gene_id == gene)$gene_symbol
+        cg_id <- subset(tpmTable, gene_id == gene)$annotation_ID
+        tmpDF = subset(tpmTable, gene_id == gene)
+        tmpDF.se = summarySE(tmpDF, measurevar = "TPM", groupvars = c("gene_id", 
+            "gene_symbol", "annotation_ID", "Sample", "Female", 
+            "Male"))
+        p <- ggplot() + geom_bar(data = filter(tmpDF.se, Female == female), mapping = aes(Female, 
+            TPM, fill = Male), stat = "identity", 
+            position = position_dodge(0.6), size = 0.7, width = 0.5) + 
+            geom_errorbar(data = filter(tmpDF.se, Female == female), aes(Female, 
+                ymin = TPM - se, ymax = TPM + se), width = 0.2, 
+                position = position_dodge(0.6), size = 1) + labs(title = paste(gene, 
+            " (", geneName, ")", sep = ""), subtitle = paste(cg_id, 
+            ": ", description, sep = "")) + theme(axis.text.x = element_text(size = 13), 
+            axis.text.y = element_text(size = 14)) + scale_fill_manual(values = c("gray", 
+            "#58b8f0","#ccae50"))
+    }
+    else {
+        fbgn_id <- subset(tpmTable, gene_symbol == gene)$gene_id
+        description <- subset(snapshots, GeneSymbol == gene)$GeneName
+        cg_id <- subset(tpmTable, gene_symbol == gene)$annotation_ID
+        tmpDF = subset(tpmTable, gene_symbol == gene)
+        tmpDF.se = summarySE(tmpDF, measurevar = "TPM", groupvars = c("gene_id", 
+            "gene_symbol", "annotation_ID", "Sample", "Female", 
+            "Male"))
+        p <- ggplot() + geom_bar(data = filter(tmpDF.se, Female == female), mapping = aes(Female, 
+            TPM, fill = Male), stat = "identity", 
+            position = position_dodge(0.6), size = 0.7, width = 0.5) + 
+            geom_errorbar(data = filter(tmpDF.se, Female == female), aes(Female, 
+                ymin = TPM - se, ymax = TPM + se), width = 0.2, 
+                position = position_dodge(0.6), size = 1) + labs(title = paste(gene, 
+            " (", fbgn_id, ")", sep = ""), subtitle = paste(cg_id, 
+            ": ", description, sep = "")) + theme(axis.text.x = element_text(size = 13), 
+            axis.text.y = element_text(size = 14)) + scale_fill_manual(values = c("gray", 
+            "#58b8f0","#ccae50"))
+    }
+    if (show_reps) {
+        p <- p + geom_point(data = filter(tmpDF, Female == female), mapping = aes(Female, 
+            TPM, colour = Male), position = position_jitterdodge(jitter.width = 0, 
+            dodge.width = 0.6), size = 0.8)
+        if (show_rep_names) {
+            p <- p + geom_text_repel(data = filter(tmpDF, Female == female), aes(label = replicate, 
+                colour = Male), force = 1)
+        }
+    }
+    return(p)
+}
 
 ##------------------------------------------------------------------------##
 ##------------------------------------------------------------------------##
@@ -429,6 +630,17 @@ edge.DE.gg <- function(edge.DE.obj) {
     geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.8, colour = "grey") +
     geom_point(alpha = 0.5) +
     theme_bw()
+    return(p)
+}
+
+##------------------------------------------------------------------------##
+##------------------------------------------------------------------------##
+
+edge.DE.gg.size <- function (edge.DE.obj) 
+{
+    p <- ggplot(edge.DE.obj, aes(logFC, -log10(PValue), shape = sig, colour = DE.cat)) + 
+        geom_vline(xintercept = 0, linetype = "dashed", alpha = 0.8, 
+            colour = "grey") + geom_point(alpha = 0.5) + theme_bw()
     return(p)
 }
 
@@ -599,4 +811,68 @@ theme_monokai_full <- function(base_size = 14, base_family = ""){
       strip.text = element_text(colour = color.text)
     )
 
+}
+
+###--------------------------------#####
+theme_black_full <- function(base_size = 14, base_family = ""){
+  color.background = "#000000"
+  color.grid.major = "#000000"
+  color.text = "#ffffff"
+  color.axis = "#ffffff"
+
+  theme_bw(base_size=base_size) +
+    theme(
+
+      panel.background=element_rect(fill=color.background, color=NA),
+      plot.background=element_rect(fill=color.background, color=color.background),
+      panel.border=element_rect(color=color.axis),
+
+      panel.grid.major=element_line(color="grey95",size=.1, linetype=3),
+      panel.grid.minor=element_blank(),
+#       axis.line.x=element_line(color=color.grid.major, size=1),
+#       axis.line.y=element_line(color=color.grid.major, size=1),
+#       axis.ticks=element_line(color=NA),
+
+      legend.background = element_rect(fill=color.background),
+      legend.key = element_rect(fill=color.background, color=NA),
+      legend.text = element_text(size=rel(.8),color=color.text),#color.axis.title),
+      legend.title = element_text(color=color.text),
+
+      plot.title=element_text(color=color.text, size=rel(1.2)),
+      plot.subtitle=element_text(color=color.text, size=rel(0.8)),
+      axis.text.x=element_text(size=rel(.95),color=color.text),
+      axis.text.y=element_text(size=rel(.95),color=color.text),
+      axis.title.x=element_text(size=rel(1),color=color.text, vjust=0),
+      axis.title.y=element_text(size=rel(1),color=color.text, vjust=1.25),
+      strip.background = element_rect(fill = color.background, colour = color.axis),
+      strip.text = element_text(colour = color.text)
+    )
+
+}
+
+
+plot.qq <- function(vec, title.str="qqplot", hit.idx=NULL) {
+  col.vec <- rep(1, length(vec))
+  if (length(hit.idx) > 0) {
+    col.vec[1:length(hit.idx)] <- 2
+    col.vec <- rev(col.vec)
+  }	
+  qqplot(-log10(ppoints(length(vec))), -log10(vec), ylab="-log10(observed)", xlab="-log10(expected)", main=title.str, col=col.vec)
+  abline(a=0, b=1)
+}
+
+ggplot.qq<- function(vec, hit.idx=NULL) {
+    col.vec <- rep(1, length(vec))
+  if (length(hit.idx) > 0) {
+    col.vec[1:length(hit.idx)] <- 2
+    col.vec <- rev(col.vec)
+  } 
+    matrix <- data.frame(expected = -log10(ppoints(length(vec))), observed = -log10(vec), sigLabel = rev(col.vec))
+    matrix$sig = ifelse(matrix$sigLabel == "1", "no", "yes")
+    p <- ggplot(matrix, aes(expected, observed, colour = sig)) + 
+        geom_point(size = 2, alpha = 0.75) + 
+        geom_abline(slope = 1, intercept = 0, linetype = "dashed", colour = "white") + 
+        theme(legend.position = "none") +
+        scale_colour_manual(values = c("gray", "red"))
+    return(p)
 }
